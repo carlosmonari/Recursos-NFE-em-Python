@@ -5,7 +5,7 @@ from nfe.pysped.xml_sped import XMLNFe, NAMESPACE_SIG, ABERTURA, tira_abertura
 import lxml
 from signxml import XMLSigner, XMLVerifier
 from signxml import methods
-    
+
 import os
 from datetime import datetime
 from time import mktime
