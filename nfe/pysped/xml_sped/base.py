@@ -46,8 +46,16 @@ CAMINHO_ESQUEMA_200 = u'schema/pl_006g/'
 DIRNAME = os.path.dirname(__file__)
 
 
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-locale.setlocale(locale.LC_COLLATE, 'pt_BR.UTF-8')
+try:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    locale.setlocale(locale.LC_COLLATE, 'pt_BR.UTF-8')
+except locale.Error as e:
+    ##Windows
+    if os.name == u'nt':
+        locale.setlocale(locale.LC_ALL, 'Portuguese_Brazil.1252')
+        locale.setlocale(locale.LC_COLLATE, 'Portuguese_Brazil.1252')
+    else:
+        raise(e)
 
 
 class NohXML(object):
