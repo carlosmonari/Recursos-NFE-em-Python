@@ -171,16 +171,19 @@ class ProcessadorNFe(object):
         self.caminho_temporario = self.caminho_temporario or u'/tmp/'
 
 
-        nome_arq_chave = tempfile.NamedTemporaryFile('w')
-        nome_arq_chave.write(self.certificado.chave)
-        nome_arq_chave.flush()
+        nome_arq_chave = self.caminho_temporario + uuid4().hex
+        arq_tmp = open(nome_arq_chave, 'w')
+        arq_tmp.write(self.certificado.chave)
+        arq_tmp.close()
 
-        nome_arq_certificado = tempfile.NamedTemporaryFile('w')
-        nome_arq_certificado.write(self.certificado.certificado)
-        nome_arq_certificado.flush()
+        nome_arq_certificado = self.caminho_temporario + uuid4().hex
+        arq_tmp = open(nome_arq_certificado, 'w')
+        arq_tmp.write(self.certificado.certificado)
+        arq_tmp.close()
 
 
-        con = HTTPSConnection(self._servidor, key_file=nome_arq_chave.name, cert_file=nome_arq_certificado.name)
+        #con = HTTPSConnection(self._servidor, key_file=nome_arq_chave.name, cert_file=nome_arq_certificado.name)
+        con = HTTPSConnection(self._servidor, key_file=nome_arq_chave, cert_file=nome_arq_certificado)
         #con = ConexaoHTTPS(self._servidor, key_file=nome_arq_chave, cert_file=nome_arq_certificado)
         con.request(u'POST', u'/' + self._url, self._soap_envio.xml.encode(u'utf-8'), self._soap_envio.header)
         resp = con.getresponse()
@@ -193,8 +196,8 @@ class ProcessadorNFe(object):
         # da existência de assinatura digital
         #
 
-        nome_arq_chave.close()
-        nome_arq_certificado.close()
+        os.remove(nome_arq_chave)
+        os.remove(nome_arq_certificado)
 
         # Dados da resposta salvos para possível debug
         self._soap_retorno.resposta.version  = resp.version
@@ -216,8 +219,8 @@ class ProcessadorNFe(object):
         con.close()
 
     def enviar_lote(self, numero_lote=None, lista_nfes=[]):
+        print 'enviando lote...'
         novos_arquivos = []
-
 
         if self.versao == u'2.00':
             envio = EnviNFe_200()
@@ -884,6 +887,7 @@ class ProcessadorNFe(object):
             # Deu certo?
             #
             print 'Deu certo.... :)',ret_envi_nfe.cStat.valor
+            print 'Consultando recibo...'
             if ret_envi_nfe.cStat.valor == u'103':
                 time.sleep(ret_envi_nfe.infRec.tMed.valor * 3) # Espere o processamento antes de consultar o recibo
                 proc_recibo, novos_arquivos = self.consultar_recibo(ambiente=ret_envi_nfe.tpAmb.valor, numero_recibo=ret_envi_nfe.infRec.nRec.valor)
