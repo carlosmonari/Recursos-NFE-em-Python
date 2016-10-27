@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from nfe.pysped.xml_sped import XMLNFe, NAMESPACE_SIG, ABERTURA, tira_abertura
-#import tempfile
-try:
-    import libxml2
-    import xmlsec
-except ImportError:
-    import lxml
-    from signxml import XMLSigner, XMLVerifier
-    from signxml import methods
-    
+
+import lxml
+from signxml import XMLSigner, XMLVerifier
+from signxml import methods
+
 import os
 from datetime import datetime
 from time import mktime
