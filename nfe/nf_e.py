@@ -27,10 +27,6 @@ class nf_e(object):
         data_final_validade.
         '''
         
-        if isinstance(arquivo, basestring):
-            with open(arquivo, 'rb') as f:
-                arquivo = f.read()
-                
         conteudo_pkcs12 = crypto.load_pkcs12(arquivo, senha)
         key_str = crypto.dump_privatekey(crypto.FILETYPE_PEM, conteudo_pkcs12.get_privatekey())
 
