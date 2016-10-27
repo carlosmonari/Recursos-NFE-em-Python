@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from nfe.pysped.xml_sped import XMLNFe, NAMESPACE_SIG, ABERTURA, tira_abertura
-#import tempfile
-try:
-    import libxml2
-    import xmlsec
-except ImportError:
-    import lxml
-    from signxml import XMLSigner, XMLVerifier
-    from signxml import methods
+
+import lxml
+from signxml import XMLSigner, XMLVerifier
+from signxml import methods
     
 import os
 from datetime import datetime
@@ -180,7 +176,7 @@ class Certificado(object):
         chave_de_acesso = None
         
         for child in xml:
-            if "infNFe" in child.tag:
+            if u'infNFe' in child.tag:
                 chave_de_acesso = child.get('Id')
             elif u'infCanc' in child.tag:
                 chave_de_acesso = child.get('Id')
@@ -188,7 +184,7 @@ class Certificado(object):
                 chave_de_acesso = child.get('Id')
             elif u'infInut' in child.tag:
                 chave_de_acesso = child.get('Id')
-            if "Signature" in child.tag:
+            if u'Signature' in child.tag:
                 #Remover TAG Signature, se tiver
                 xml.remove(child)
         
@@ -201,7 +197,7 @@ class Certificado(object):
         #buscando chave de acesso no documento e retiranto TAG Signature
         chave_de_acesso = self._ler_chave_acesso(doc_xml)
         if chave_de_acesso is None:
-            raise ValueError('Este arquivo nao possui Chave de Acesso.')
+            raise ValueError(u'Este arquivo nao possui Chave de Acesso.')
         
         #String para bytes para a leitura no signxml
         chave = self.chave.encode('utf-8')
