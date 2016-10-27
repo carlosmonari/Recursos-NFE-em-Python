@@ -26,7 +26,11 @@ class nf_e(object):
         @return: dicionário com a string do certificado, chave privada, emissor, proprietario, data_inicio_validade e
         data_final_validade.
         '''
-
+        
+        if isinstance(arquivo, basestring):
+            with open(arquivo, 'rb') as f:
+                arquivo = f.read()
+                
         conteudo_pkcs12 = crypto.load_pkcs12(arquivo, senha)
         key_str = crypto.dump_privatekey(crypto.FILETYPE_PEM, conteudo_pkcs12.get_privatekey())
 
@@ -65,7 +69,7 @@ class nf_e(object):
         p.salvar_arquivos = False
         p.tipo_contingencia = tipo_contingencia
         p.caminho = u''
-        processo = p.consultar_servico()
+        processo, novos_arquivos = p.consultar_servico()
         status = processo.resposta.cStat.valor
         processo.envio.xml
         processo.resposta.xml
