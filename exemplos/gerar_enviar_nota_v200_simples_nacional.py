@@ -21,9 +21,12 @@ from nfe.pysped.nfe.webservices_flags import UF_CODIGO
 
 if __name__ == '__main__':
     nova_nfe = nf_e()
-    #Caminho para o arquivo .pfx do certificado, ou o binario do arquivo; Senha do arquivo
-    #(Associacao.pfx nao e valido, utilize um certificado valido)
-    info_certificado = nova_nfe.extrair_certificado_a1("certificado/Associacao.pfx", "associacao")
+    #Associacao.pfx nao e valido, utilize um certificado valido
+    caminho_certificado = "certificado/Associacao.pfx"
+    with open(caminho_certificado, 'rb') as f:
+        arquivo = f.read()
+    
+    info_certificado = nova_nfe.extrair_certificado_a1(arquivo, "associacao")
     
     ##Montar nota fiscal
     
